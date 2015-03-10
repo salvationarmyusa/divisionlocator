@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta name="author" content="Jon Bukiewicz">
+   <meta name="description" content="Utility using jQuery, cookies, geolocation &amp; an internal API that displays the nearest service center's website based on visitor zip.">
+   <title>Zip Test</title>
+   <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+</head>
+<body>
+<div class="container">
+   <header>
+      <h1>Zip Test</h1>
+   </header>
+   <section id="fetch">
+      <input type="text" placeholder="Enter a zip" id="term" />
+      <button id="search">Find a location</button>
+   </section>
+   <section id="results"></section>
+</div>
+
+   <script src="//code.jquery.com/jquery-1.11.2.js"></script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.3.1/lodash.min.js"></script>
+   <script src="scripts.js"></script>
+</body>
+</html>
