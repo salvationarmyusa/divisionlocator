@@ -5,80 +5,77 @@
 */
 
 
-//
-// Variables
-//
+// Variables, Methods
 
-var zipCode,
-    submit = $('#search'),
+var submit = $('#search'),
     postalApi = "http://public.api.gdos.salvationarmy.org/geocode/postal?",
     searchApi = "http://public.api.gdos.salvationarmy.org/search?",
     hideOnCookie = $('.hideOnCookie'),
-    showOnCookie = $('.showOnCookie');
+    showOnCookie = $('.showOnCookie'),
+  
+    //fallback = setTimeout(function() { fail('30 seconds expired'); }, 30000),
+    addhttp,
+    latLong,
+    fail;
 
 
+// Add http to URL if missing
 
-/**
-* Add http to URL if missing
-*
-*/
-
-function addhttp(url) {
+addhttp = function(url) {
   if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
     url = "http://" + url;
   }
-    return url;
+  return url;
 }
 
-/**
-* Find Lat/Long from Zip
-*
-*/
+// Find Lat/Long from Zip
 
-function latLong(){
+latLong = function(){
 
-  var zipCode = $('#term').val();
+  var zip = $('#term').val();
 
   $.getJSON( postalApi, {
       isoCountry: "us",
-      postalCode: zipCode
+      postalCode: zip
   }).done(function( data ) {
       var lat = data.latitude;
       var lon = data.longitude;
       var latLong = [lat,lon];
+      console.log(latLong);
       return latLong;
   });
+
 }
 
-/**
-* Find Lat/Long from Zip
-*
-*/
+// Geocode location
 
-
-function findUserLocation() {
-
-
-  if ($.cookie('zipResult')) {
-    $.cookie('zipResult', null, { path: '/' });
-  }
-
-  // If geolocation is unsupported, stop further operations and show message
-  if (!navigator.geolocation) {
-    $res.html('Geolocation unsupported. Please use the zip code box to enter and save your zip code.');
-    return false;
-  }
-
-  navigator.geolocation.getCurrentPosition(positionFound, positionError);
+var options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
 };
 
+function success(pos) {
+  var crd = pos.coords;
 
-$('#search').click(latLong);
-
-/**
-* Error positioning
-*
-*/
-positionError = function (err) {
-  fail(err.message);
+  console.log('Your current position is:');
+  console.log('Latitude : ' + crd.latitude);
+  console.log('Longitude: ' + crd.longitude);
+  console.log('More or less ' + crd.accuracy + ' meters.');
 };
+
+function error(err) {
+  console.warn('ERROR(' + err.code + '): ' + err.message);
+};
+
+navigator.geolocation.getCurrentPosition(success, error, options);
+
+// Failure message
+
+fail = function (err) {
+  console.log('err', err);
+};
+
+// Initialize utility
+
+submit.click(latLong);
