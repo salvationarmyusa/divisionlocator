@@ -1,0 +1,14 @@
+{
+  "name": "usn-divisionlocator",
+  "version": "0.0.0",
+  "private": false,
+  "repository": "https://github.com/salvationarmyusa/divisionlocator",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "author": "Jon Bukiewicz | jon@tenebro.so",
+  "devDependencies": {
+    "serve-static": "~1.9",
+    "connect": "~3.3"
+  }
+}
