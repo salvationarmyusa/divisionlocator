@@ -8,6 +8,8 @@
 // Variables, Methods
 
 var submit = $('#search'),
+    locate = $('#locate'),
+    results = $('#results'),
     postalApi = "http://public.api.gdos.salvationarmy.org/geocode/postal?",
     searchApi = "http://public.api.gdos.salvationarmy.org/search?",
     hideOnCookie = $('.hideOnCookie'),
@@ -16,6 +18,7 @@ var submit = $('#search'),
     //fallback = setTimeout(function() { fail('30 seconds expired'); }, 30000),
     addhttp,
     latLong,
+    geoLocate,
     fail;
 
 
@@ -48,27 +51,37 @@ latLong = function(){
 }
 
 // Geocode location
+// https://developer.mozilla.org/en-US/docs/Web/API/Location
 
-var options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
-  maximumAge: 0
-};
+geoLocate = function(){
 
-function success(pos) {
-  var crd = pos.coords;
+  if(!navigator.geolocation){
+    result.html('<p>Sorry, geolocation is not supported in your browser. Please enter a zip code to search');
+    return;
+  }
 
-  console.log('Your current position is:');
-  console.log('Latitude : ' + crd.latitude);
-  console.log('Longitude: ' + crd.longitude);
-  console.log('More or less ' + crd.accuracy + ' meters.');
-};
+  var options = {
+    enableHighAccuracy: false,
+    timeout: 5000,
+    maximumAge: 0
+  };
 
-function error(err) {
-  console.warn('ERROR(' + err.code + '): ' + err.message);
-};
+  function success(pos) {
+    var crd = pos.coords;
+    var lat = crd.latitude;
+    var lon = crd.longitude;
+    var latLong = [lat,lon];
+    console.log(latLong);
+    return latLong;
+  };
 
-navigator.geolocation.getCurrentPosition(success, error, options);
+  function error(err) {
+    result.html('<p>Sorry! There was an error. Please try again or use the manual zip search feature. The error was' + err.code + ' ' + err.message);
+  };
+
+  navigator.geolocation.getCurrentPosition(success, error, options);
+
+}
 
 // Failure message
 
@@ -79,3 +92,4 @@ fail = function (err) {
 // Initialize utility
 
 submit.click(latLong);
+locate.click(geoLocate);
