@@ -37,16 +37,21 @@ latLong = function(){
 
   var zip = $('#term').val();
 
-  $.getJSON( postalApi, {
-      isoCountry: "us",
-      postalCode: zip
-  }).done(function( data ) {
-      var lat = data.latitude;
-      var lon = data.longitude;
-      var latLong = [lat,lon];
-      console.log(latLong);
-      return latLong;
-  });
+  if(zip.length < 5) {
+    results.html('<p>Please enter a zip code.</p>');
+  } else {
+    results.empty();
+    $.getJSON( postalApi, {
+        isoCountry: "us",
+        postalCode: zip
+    }).done(function( data ) {
+        var lat = data.latitude;
+        var lon = data.longitude;
+        var latLong = [lat,lon];
+        console.log(latLong);
+        return latLong;
+    });
+  }
 
 }
 
@@ -56,7 +61,7 @@ latLong = function(){
 geoLocate = function(){
 
   if(!navigator.geolocation){
-    result.html('<p>Sorry, geolocation is not supported in your browser. Please enter a zip code to search');
+    results.html('<p>Sorry, geolocation is not supported in your browser. Please enter a zip code to search');
     return;
   }
 
